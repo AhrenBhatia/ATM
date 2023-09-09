@@ -2,9 +2,9 @@ import java.util.*;
 import java.util.Map;
 
 public class Atm {
-    public Map<String, Double> accounts = new HashMap<String, Double>();
+    public static Map<String, Double> accounts = new HashMap<String, Double>();
 
-    public void openAccount(String userID, double deposit) throws Exception {
+    public static void openAccount(String userID, double deposit) throws Exception {
         if (accounts.containsKey(userID)) {
             throw new Exception("Error: User already exists");
         } else {
@@ -12,7 +12,7 @@ public class Atm {
         }
     }
 
-    public void closeAccount(String userID) throws Exception {
+    public static void closeAccount(String userID) throws Exception {
         if (accounts.get(userID) > 0) {
             throw new Exception("Error: Please withdraw all money first");
         } else {
@@ -20,7 +20,7 @@ public class Atm {
         }
     }
 
-    public double checkBalance(String userID) throws Exception {
+    public static double checkBalance(String userID) throws Exception {
         if (accounts.containsKey(userID)) {
             return accounts.get(userID);
         } else {
@@ -28,7 +28,7 @@ public class Atm {
         }
     }
 
-    public double depositMoney(String userID, double amount) throws Exception {
+    public static double depositMoney(String userID, double amount) throws Exception {
         if (accounts.containsKey(userID)) {
             accounts.replace(userID, accounts.get(userID) + amount);
             return amount;
@@ -37,10 +37,10 @@ public class Atm {
         }
     }
 
-    public double withdrawMoney(String userID, double amount) throws Exception {
+    public static double withdrawMoney(String userID, double amount) throws Exception {
         if (accounts.containsKey(userID)) {
             double holder = accounts.get(userID);
-            if (holder > amount) {
+            if (holder >= amount) {
                 accounts.replace(userID, holder - amount);
                 return holder - amount;
             } else {
@@ -51,12 +51,31 @@ public class Atm {
         }
     }
 
-    public boolean transferMoney(String fromAccount, String toAccount, double amount) throws Exception {
+    public static boolean transferMoney(String fromAccount, String toAccount, double amount) throws Exception {
         if (withdrawMoney(fromAccount, amount) > 0 && depositMoney(toAccount, amount) > 0) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        openAccount("Ahren", 100);
+        openAccount("Bari", 1000);
+        openAccount("Asher", 20);
+
+        // closeAccount("Asher");
+        withdrawMoney("Asher", 20);
+        closeAccount("Asher");
+
+        // withdrawMoney("Asher", 100);
+        depositMoney("Ahren", 10000);
+
+        transferMoney("Ahren", "Bari", 1000);
+        // withdrawMoney("Ahren", 1100);
+        // depositMoney("Bari", 1100);
+        System.out.println(checkBalance("Ahren"));
+        System.out.println(checkBalance("Bari"));
     }
 
 }
