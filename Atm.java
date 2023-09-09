@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map;
 
@@ -59,6 +62,20 @@ public class Atm {
         }
     }
 
+    public static void audit() throws FileNotFoundException {
+        File file = new File("AccountAudit.txt");
+        if (file.exists()) {
+            file.delete();
+        }
+        PrintWriter pw = new PrintWriter("AccountAudit.txt");
+        for (String account : accounts.keySet()) {
+            pw.write("Username: " + account + "    Amount: " + accounts.get(account) + "\n");
+
+        }
+
+        pw.close();
+    }
+
     public static void main(String[] args) throws Exception {
         openAccount("Ahren", 100);
         openAccount("Bari", 1000);
@@ -69,13 +86,15 @@ public class Atm {
         closeAccount("Asher");
 
         // withdrawMoney("Asher", 100);
-        depositMoney("Ahren", 10000);
+        depositMoney("Ahren", 11000);
 
         transferMoney("Ahren", "Bari", 1000);
         // withdrawMoney("Ahren", 1100);
         // depositMoney("Bari", 1100);
         System.out.println(checkBalance("Ahren"));
         System.out.println(checkBalance("Bari"));
+
+        audit();
     }
 
 }
